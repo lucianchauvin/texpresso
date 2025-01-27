@@ -1189,15 +1189,28 @@ bool texpresso_main(struct persistent_state *ps)
           case SDLK_PAGEUP:
             previous_page(ps->ctx, ui, 0);
             break;
-
+          case SDLK_k:
+            if(e.key.keysym.mod & KMOD_SHIFT){
+              previous_page(ps->ctx, ui, 0);
+            } else {
+              ui_pan(ps->ctx, ui, 1.0/35.0);
+            }
+            break;
           case SDLK_UP:
-            ui_pan(ps->ctx, ui, 2.0/3.0);
+            ui_pan(ps->ctx, ui, 1.0/35.0);
             break;
 
           case SDLK_DOWN:
-            ui_pan(ps->ctx, ui, -2.0/3.0);
+            ui_pan(ps->ctx, ui, -1.0/35.0);
             break;
 
+          case SDLK_j:
+            if(e.key.keysym.mod & KMOD_SHIFT){
+              next_page(ps->ctx, ui, 0);
+            } else {
+              ui_pan(ps->ctx, ui, -1.0/35.0);
+            }
+            break;
           case SDLK_RIGHT:
           case SDLK_PAGEDOWN:
             next_page(ps->ctx, ui, 0);
@@ -1206,6 +1219,22 @@ bool texpresso_main(struct persistent_state *ps)
           case SDLK_p:
             config->fit = (config->fit == FIT_PAGE) ? FIT_WIDTH : FIT_PAGE;
             schedule_event(RENDER_EVENT);
+            break;
+
+          case SDLK_MINUS:
+            ui->zoom = fz_maxi(ui->zoom - 200, 0);
+            float of_MINUS = config->zoom, nf_MINUS = zoom_factor(ui->zoom);
+            config->zoom = nf_MINUS;
+            schedule_event(RENDER_EVENT);
+            break;
+
+          case SDLK_EQUALS:
+            if(e.key.keysym.mod & KMOD_SHIFT){
+              ui->zoom = fz_maxi(ui->zoom + 200, 0);
+              float of_PLUS = config->zoom, nf_PLUS = zoom_factor(ui->zoom);
+              config->zoom = nf_PLUS;
+              schedule_event(RENDER_EVENT);
+            }
             break;
 
           case SDLK_b:
@@ -1269,7 +1298,7 @@ bool texpresso_main(struct persistent_state *ps)
           py = e.wheel.y;
 #endif
           bool ctrl = !!(SDL_GetModState() & KMOD_CTRL);
-          ui_mouse_wheel(ps->ctx, ui, px, py, mx, my, ctrl, e.wheel.timestamp);
+          ui_mouse_wheel(ps->ctx, ui, px, py, mx*10, my*10, ctrl, e.wheel.timestamp);
         }
         break;
 
