@@ -486,17 +486,17 @@ static void ui_pan(fz_context *ctx, ui_state *ui, float factor)
   //fprintf(stderr, "ui_pan: factor:%.02f delta:%.02f current:%.02f range:%.02f\n",
   //        factor, delta, config->pan.y, range);
 
-  if (config->pan.y == -range && factor < 0)
-  {
-    next_page(ctx, ui, 1);
-    return;
-  }
+  /* if (config->pan.y == -range && factor < 0) */
+  /* { */
+  /*   next_page(ctx, ui, 1); */
+  /*   return; */
+  /* } */
 
-  if (config->pan.y == range && factor > 0)
-  {
-    previous_page(ctx, ui, 1);
-    return;
-  }
+  /* if (config->pan.y == range && factor > 0) */
+  /* { */
+  /*   previous_page(ctx, ui, 1); */
+  /*   return; */
+  /* } */
 
   config->pan.y += delta;
   schedule_event(RENDER_EVENT);
